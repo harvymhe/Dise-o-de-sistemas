@@ -9,7 +9,7 @@ class Usuario(ABC):
         self.nombre = nombre
         self.correo = correo
 
-class Estudiante(Usuario): # RF-01: Gestión de perfiles de usuario
+class Estudiante(Usuario):
     LIMITE_FALTAS = 3
 
     def __init__(self, id_usuario: str, nombre: str, correo: str, estrategia: ReglaPrioridad = None):
@@ -18,7 +18,7 @@ class Estudiante(Usuario): # RF-01: Gestión de perfiles de usuario
         self.contador_no_shows = 0
         self.suspendido = False
 
-    def registrar_no_show(self): # RF-08: Sistema de penalización y strikes
+    def registrar_no_show(self):
         self.contador_no_shows += 1
         if self.contador_no_shows >= self.LIMITE_FALTAS:
             self.suspendido = True
@@ -26,22 +26,22 @@ class Estudiante(Usuario): # RF-01: Gestión de perfiles de usuario
     def cancelar_reserva(self, reserva: 'Reserva', tiempo_actual: datetime):
         reserva.evaluar_no_show(tiempo_actual)
 
-class CapitanEquipo(Estudiante): # RF-01: Especialización para Capitanes
+class CapitanEquipo(Estudiante):
     def __init__(self, id_usuario: str, nombre: str, correo: str, nombre_equipo: str, estrategia: ReglaPrioridad):
         super().__init__(id_usuario, nombre, correo, estrategia)
         self.nombre_equipo = nombre_equipo
 
-class Cancha: # RF-04: Gestión y estados de canchas
+class Cancha:
     def __init__(self, id_cancha: str, nombre: str):
         self.id_cancha = id_cancha
         self.nombre = nombre
         self.estado = "Habilitada"
         self.reservas_activas = []
 
-    def cambiar_estado(self, nuevo_estado: str): # RF-04
+    def cambiar_estado(self, nuevo_estado: str): 
         self.estado = nuevo_estado
 
-    def intentar_reservar(self, nueva_reserva: 'Reserva') -> str: # RF-07: Resolución de conflictos
+    def intentar_reservar(self, nueva_reserva: 'Reserva') -> str:
         for existente in self.reservas_activas:
             if existente.estado == EstadoReserva.ACTIVA:
                 se_solapan = (
@@ -68,16 +68,16 @@ class Reserva:
         self.id_reserva = id_reserva
         self.cancha = cancha
         self.solicitante = solicitante
-        self.rango_horario = rango # RF-05: Validación de rango horario inmutable
+        self.rango_horario = rango 
         self.estado = EstadoReserva.ACTIVA
 
-    def evaluar_no_show(self, tiempo_actual: datetime): # RF-03 y RF-06
+    def evaluar_no_show(self, tiempo_actual: datetime):
         if self.estado != EstadoReserva.ACTIVA:
             raise ValueError("Solo se pueden cancelar reservas activas.")
         
         tiempo_faltante = self.rango_horario.hora_inicio - tiempo_actual
         if tiempo_faltante <= timedelta(hours=2):
-            self.estado = EstadoReserva.NO_SHOW # RF-03: Mutación a No-Show (< 2h)
+            self.estado = EstadoReserva.NO_SHOW
             self.solicitante.registrar_no_show()
         else:
-            self.estado = EstadoReserva.CANCELADA # RF-06: Cancelación anticipada (> 2h)
+            self.estado = EstadoReserva.CANCELADA
