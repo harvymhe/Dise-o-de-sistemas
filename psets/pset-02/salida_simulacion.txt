@@ -1,0 +1,597 @@
+
+==============================================================================
+E1 | CU-01: una reserva en cada sede | RF-01, RF-13, RF-14
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-05 06:00-07:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Sur | mensaje de texto a 0991111111 | CONFIRMADA: R002, cancha S1, 2026-10-05 22:00-23:00; 
+[VALIDADO] Norte acepta 06-07 y Sur acepta 22-23; avisos por correo y texto.
+[VALIDADO] Factory Method asigna la política al crear.
+
+==============================================================================
+E2 | CU-01, alterno 3a: horario inválido | RF-13
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.3a] Flujo alterno | RECHAZO: Fuera del horario de Campus Sur.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.2a] Flujo alterno | Lista vacía; continuar en 4.
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] Sur rechaza 06-07 sin registrar ninguna reserva.
+
+==============================================================================
+E3 | CU-02: recurrencia completa y rechazo todo o nada | RF-09, RF-10
+==============================================================================
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.3] Sistema prepara las ocurrencias semanales con equipo y notas.
+[MainThread | CU-02.4] Sistema recorre las semanas en orden y valida en cada una horario de sede, cancha habilitada y ausencia de reservas o bloqueos.
+[MainThread | CU-02.4.semana-1] Verificación semanal | 2026-10-05 14:00-15:00: válida
+[MainThread | CU-02.4.semana-2] Verificación semanal | 2026-10-12 14:00-15:00: válida
+[MainThread | CU-02.4.semana-3] Verificación semanal | 2026-10-19 14:00-15:00: válida
+[MainThread | CU-02.4.semana-4] Verificación semanal | 2026-10-26 14:00-15:00: válida
+[MainThread | CU-02.5] Sistema registra todas las ocurrencias y su vínculo a la serie en una sola operación.
+[MainThread | CU-02.6] Sistema notifica la serie por el canal de sede y confirma sus ocurrencias.
+[MainThread | CU-02.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | SERIE S001 CONFIRMADA: R001, cancha N1, 2026-10-05 14:00-15:00; 
+[MainThread | CU-02.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | SERIE S001 CONFIRMADA: R002, cancha N1, 2026-10-12 14:00-15:00; 
+[MainThread | CU-02.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | SERIE S001 CONFIRMADA: R003, cancha N1, 2026-10-19 14:00-15:00; 
+[MainThread | CU-02.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | SERIE S001 CONFIRMADA: R004, cancha N1, 2026-10-26 14:00-15:00; 
+[VALIDADO] Cuatro ocurrencias oficiales y sus políticas asignadas.
+[VALIDADO] Builder conserva equipo y notas en cada semana.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Sur | mensaje de texto a 0991111111 | CONFIRMADA: R005, cancha S1, 2026-10-19 14:00-15:00; 
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R001', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-05 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R002', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-12 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R003', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-19 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R004', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-26 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'})
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.3] Sistema prepara las ocurrencias semanales con equipo y notas.
+[MainThread | CU-02.4] Sistema recorre las semanas en orden y valida en cada una horario de sede, cancha habilitada y ausencia de reservas o bloqueos.
+[MainThread | CU-02.4.semana-1] Verificación semanal | 2026-10-05 14:00-15:00: válida
+[MainThread | CU-02.4.semana-2] Verificación semanal | 2026-10-12 14:00-15:00: válida
+[MainThread | CU-02.4.semana-3] Verificación semanal | 2026-10-19 14:00-15:00: conflicto o franja inválida
+[MainThread | CU-02.4a] Flujo alterno | RECHAZO: Semana 3, fecha 2026-10-19. Cero ocurrencias registradas.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R001', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-05 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R002', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-12 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R003', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-19 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'}, {'id': 'R004', 'tipo': 'ReservaEquipoOficial', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U3', 'rango': '2026-10-26 14:00-15:00', 'motivo': '', 'serie': 'S001', 'equipo': ('balones', 'red'), 'notas': 'Dejar red montada.', 'politica': 'CancelacionCapitan'})
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] Conflicto en semana 3: cero registros parciales y ninguna reserva oficial nueva.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R005', 'tipo': 'ReservaRegular', 'estado': 'ACTIVA', 'cancha': 'S1', 'sede': 'Campus Sur', 'solicitante': 'U1', 'rango': '2026-10-19 14:00-15:00', 'motivo': '', 'serie': None, 'equipo': (), 'notas': '', 'politica': 'CancelacionEstudiante'},)
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] La serie rechazada no desplaza la reserva anterior.
+
+==============================================================================
+E4 | CU-03: tres políticas de cancelación | RF-03, RF-07
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-05 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R002, cancha N2, 2026-10-05 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Sur | mensaje de texto a 0992222222 | CONFIRMADA: R003, cancha S1, 2026-10-05 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.4] Sistema cambia ACTIVA a CANCELADA y libera la franja.
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R001: CANCELADA
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CANCELADA: R001, cancha N1, 2026-10-05 16:00-17:00; Cancelación del solicitante
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R002: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | NO_SHOW: R002, cancha N2, 2026-10-05 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.4] Sistema cambia ACTIVA a CANCELADA y libera la franja.
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R003: CANCELADA
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Sur | mensaje de texto a 0992222222 | CANCELADA: R003, cancha S1, 2026-10-05 16:00-17:00; Mantenimiento
+[VALIDADO] Dos horas exactas: cancelación normal del estudiante.
+[VALIDADO] Capitán con ocho horas de anticipación: no-show.
+[VALIDADO] Administrador anula sin penalidad.
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.2a] Flujo alterno | RECHAZO: Reserva inexistente, terminal, ajena o anulación sin motivo.
+[VALIDADO] Cancelar una reserva terminal no duplica faltas.
+
+==============================================================================
+E5 | CU-03 → CU-01: tres no-shows mensuales y suspensión | RF-08
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-10 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R002, cancha N1, 2026-10-11 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R003, cancha N1, 2026-10-12 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R001: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R001, cancha N1, 2026-10-10 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 2; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R002: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R002, cancha N1, 2026-10-11 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 3; suspendido=True; vence=2026-10-19 15:00:00
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R003: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R003, cancha N1, 2026-10-12 16:00-17:00; Cancelación tardía
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.2b] Flujo alterno | RECHAZO: Suspensión hasta 2026-10-19 15:00:00
+[VALIDADO] Tres faltas de octubre activan suspensión y el alterno CU-01.2b.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R004, cancha N1, 2026-10-22 16:00-17:00; 
+[VALIDADO] En el instante exacto de vencimiento puede volver a reservar.
+
+==============================================================================
+E6 | CU-04: Prototype, bloqueo y anulación sin falta | RF-11, RF-12
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-15 16:00-17:00; 
+[VALIDADO] Cambiar un clon no altera plantilla ni otro clon (deepcopy).
+[MainThread | CU-04.1] Administrador define motivo, franja y equipo de la plantilla; elige canchas y fechas.
+[MainThread | CU-04.2] Sistema valida rol, datos y destinos antes de aplicar cambios.
+[MainThread | CU-04.3] Sistema clona la plantilla para cada destino con equipo independiente.
+[MainThread | CU-04.4] Sistema toma cada clon, detecta todas sus reservas activas solapadas y registra el bloqueo. | N1: 2026-10-15
+[MainThread | CU-04.5] Sistema anula sin penalidad las reservas afectadas, conserva el motivo y repite 4-5 para los clones restantes.
+[MainThread | CU-04.4] Sistema toma cada clon, detecta todas sus reservas activas solapadas y registra el bloqueo. | N2: 2026-10-15
+[MainThread | CU-04.4a] Flujo alterno | Sin afectados para este clon; continuar con el siguiente.
+[MainThread | CU-04.6] Sistema notifica cada reserva afectada por su sede y confirma los bloqueos al administrador.
+[MainThread | CU-04.6 AVISO] Campus Norte | correo institucional a ana@u.edu | ANULADA POR BLOQUEO SIN PENALIDAD: R001, cancha N1, 2026-10-15 16:00-17:00; Torneo universitario
+[VALIDADO] Dos bloqueos aplicados; la reserva existente fue anulada y notificada.
+[VALIDADO] Bloquear no genera penalidad al solicitante.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[VALIDADO] El bloqueo impide nuevas reservas solapadas.
+
+==============================================================================
+E7 | CU-01 concurrente: dos hilos, una confirmación | RNF-04
+==============================================================================
+[MainThread | CU-07.1] Actor consulta sede, cancha, fecha e intervalo.
+[MainThread | CU-07.2] Sistema valida datos de la consulta.
+[MainThread | CU-07.3] Sistema comprueba horario, estado de cancha, reservas activas y bloqueos.
+[MainThread | CU-07.4] Sistema informa disponibilidad y, si corresponde, motivo de indisponibilidad. | disponible=True; la consulta no retiene la franja.
+[VALIDADO] Ana ve inicialmente la franja libre.
+[MainThread | CU-07.1] Actor consulta sede, cancha, fecha e intervalo.
+[MainThread | CU-07.2] Sistema valida datos de la consulta.
+[MainThread | CU-07.3] Sistema comprueba horario, estado de cancha, reservas activas y bloqueos.
+[MainThread | CU-07.4] Sistema informa disponibilidad y, si corresponde, motivo de indisponibilidad. | disponible=True; la consulta no retiene la franja.
+[VALIDADO] Bruno ve inicialmente la franja libre.
+[Bruno | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[Bruno | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[Bruno | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[Bruno | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[Bruno | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[Bruno | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[Bruno | CU-01.6 AVISO] Campus Norte | correo institucional a bruno@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-20 16:00-17:00; 
+[Ana | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[Ana | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[Ana | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[Ana | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[Ana | CU-01.4a] Flujo alterno | Campus Norte | correo institucional a admin@u.edu | Conflicto C001: R001
+[Ana | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[VALIDADO] Ambos hilos terminan.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.2a] Flujo alterno | Lista vacía; continuar en 4.
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R001', 'tipo': 'ReservaRegular', 'estado': 'ACTIVA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U2', 'rango': '2026-10-20 16:00-17:00', 'motivo': '', 'serie': None, 'equipo': (), 'notas': '', 'politica': 'CancelacionEstudiante'},)
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] EXACTAMENTE 1 confirmación, 1 rechazo y 1 reserva activa.
+
+==============================================================================
+E8 | CU-05, CU-06, CU-07 y CU-08: completar flujos administrativos
+==============================================================================
+[MainThread | CU-05.1] Administrador solicita registrar o modificar una cancha y sus datos.
+[MainThread | CU-05.2] Sistema valida rol, identificador y sede.
+[MainThread | CU-05.3] Sistema registra la cancha o aplica los cambios y su estado operativo.
+[MainThread | CU-05.4] Sistema confirma los datos y estado resultantes.
+[VALIDADO] Administrador registra cancha.
+[MainThread | CU-05.1] Administrador solicita registrar o modificar una cancha y sus datos.
+[MainThread | CU-05.2] Sistema valida rol, identificador y sede.
+[MainThread | CU-05.3] Sistema registra la cancha o aplica los cambios y su estado operativo.
+[MainThread | CU-05.3a] Flujo alterno | Nuevas reservas impedidas; las anteriores se conservan.
+[MainThread | CU-05.4] Sistema confirma los datos y estado resultantes.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[VALIDADO] Cancha deshabilitada rechaza reservas.
+[MainThread | CU-05.1] Administrador solicita registrar o modificar una cancha y sus datos.
+[MainThread | CU-05.2] Sistema valida rol, identificador y sede.
+[MainThread | CU-05.3] Sistema registra la cancha o aplica los cambios y su estado operativo.
+[MainThread | CU-05.4] Sistema confirma los datos y estado resultantes.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N3, 2026-10-20 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4a] Flujo alterno | Campus Norte | correo institucional a admin@u.edu | Conflicto C001: R001
+[MainThread | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[MainThread | CU-06.1] Administrador solicita revisar el conflicto informado.
+[MainThread | CU-06.2] Sistema valida el rol administrador y presenta las reservas involucradas, sus estados y motivos.
+[MainThread | CU-06.2] Sistema valida el rol administrador y presenta las reservas involucradas, sus estados y motivos. | Reservas: ('R001',)
+[MainThread | CU-06.3] Administrador selecciona la reserva que anulará y declara el motivo.
+[MainThread | CU-06.4] Sistema ejecuta CU-03 como anulación administrativa.
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.4] Sistema cambia ACTIVA a CANCELADA y libera la franja.
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R001: CANCELADA
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CANCELADA: R001, cancha N3, 2026-10-20 16:00-17:00; Resolución de disputa por el administrador
+[MainThread | CU-06.5] Sistema informa al administrador el resultado de la intervención.
+[VALIDADO] El administrador interviene y CU-06 reutiliza CU-03.
+[MainThread | CU-07.1] Actor consulta sede, cancha, fecha e intervalo.
+[MainThread | CU-07.2] Sistema valida datos de la consulta.
+[MainThread | CU-07.3] Sistema comprueba horario, estado de cancha, reservas activas y bloqueos.
+[MainThread | CU-07.4] Sistema informa disponibilidad y, si corresponde, motivo de indisponibilidad. | disponible=True; la consulta no retiene la franja.
+[VALIDADO] Se liberó la franja.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R001', 'tipo': 'ReservaRegular', 'estado': 'CANCELADA', 'cancha': 'N3', 'sede': 'Campus Norte', 'solicitante': 'U1', 'rango': '2026-10-20 16:00-17:00', 'motivo': 'Resolución de disputa por el administrador', 'serie': None, 'equipo': (), 'notas': '', 'politica': 'CancelacionEstudiante'},)
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] El historial conserva estado y motivo de intervención.
+
+==============================================================================
+E9 | Límites y regresiones del PSet 1 | RF-02, RF-03, RF-08, RF-09, RF-15
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-05 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4b] Flujo alterno | Todos los conflictos son desplazables; plan sin cambios todavía.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | ANULADA SIN PENALIDAD: R001, cancha N1, 2026-10-05 16:00-17:00; Desplazamiento por prioridad oficial
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R002, cancha N1, 2026-10-05 16:00-17:00; 
+[VALIDADO] Strategy oficial desplaza antes de las 18:00.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R001', 'tipo': 'ReservaRegular', 'estado': 'CANCELADA', 'cancha': 'N1', 'sede': 'Campus Norte', 'solicitante': 'U1', 'rango': '2026-10-05 16:00-17:00', 'motivo': 'Desplazamiento por prioridad oficial', 'serie': None, 'equipo': (), 'notas': '', 'politica': 'CancelacionEstudiante'},)
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] El desplazamiento conserva historial.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R003, cancha N1, 2026-10-06 18:00-19:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4a] Flujo alterno | Campus Norte | correo institucional a admin@u.edu | Conflicto C001: R003
+[MainThread | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[VALIDADO] A las 18:00 no existe prioridad oficial.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a bruno@u.edu | CONFIRMADA: R004, cancha N2, 2026-10-07 14:00-15:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R005, cancha N2, 2026-10-07 15:00-16:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.4a] Flujo alterno | Campus Norte | correo institucional a admin@u.edu | Conflicto C002: R004, R005
+[MainThread | CU-01.4a] Flujo alterno | RECHAZO: Cancha no disponible.
+[VALIDADO] Se evalúan todos los conflictos antes de desplazar.
+[MainThread | CU-08.1] Solicitante pide sus reservas activas e historial.
+[MainThread | CU-08.2] Sistema selecciona solo reservas del solicitante.
+[MainThread | CU-08.3] Sistema presenta sede, cancha, intervalo, estado, motivo y serie cuando corresponda. | ({'id': 'R004', 'tipo': 'ReservaRegular', 'estado': 'ACTIVA', 'cancha': 'N2', 'sede': 'Campus Norte', 'solicitante': 'U2', 'rango': '2026-10-07 14:00-15:00', 'motivo': '', 'serie': None, 'equipo': (), 'notas': '', 'politica': 'CancelacionEstudiante'},)
+[MainThread | CU-08.4] Sistema finaliza la consulta sin modificar reservas.
+[VALIDADO] No hay desplazamientos parciales.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R006, cancha N1, 2026-10-08 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.4] Sistema cambia ACTIVA a CANCELADA y libera la franja.
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R006: CANCELADA
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CANCELADA: R006, cancha N1, 2026-10-08 16:00-17:00; Cancelación del solicitante
+[VALIDADO] Veinticuatro horas exactas: cancelación oficial normal.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Sur | mensaje de texto a 0991111111 | CONFIRMADA: R007, cancha S1, 2026-10-08 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.2a] Flujo alterno | RECHAZO: Reserva inexistente, terminal, ajena o anulación sin motivo.
+[VALIDADO] Un estudiante no cancela reservas ajenas.
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R007: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Sur | mensaje de texto a 0991111111 | NO_SHOW: R007, cancha S1, 2026-10-08 16:00-17:00; Cancelación tardía
+[VALIDADO] Una hora y 59 minutos: no-show regular.
+[VALIDADO] Singleton devuelve una única instancia.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Sur
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Sur | mensaje de texto a 0992222222 | CONFIRMADA: R008, cancha S1, 2026-10-09 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R008: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Sur | mensaje de texto a 0992222222 | NO_SHOW: R008, cancha S1, 2026-10-09 16:00-17:00; Cancelación tardía
+[VALIDADO] Cambiar la configuración a 3 h modifica la evaluación sin editar la Strategy.
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.2a] Flujo alterno | RECHAZO: Semanas debe ser entero entre 2 y 8.
+[VALIDADO] Builder rechaza 9 semanas.
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.3] Sistema prepara las ocurrencias semanales con equipo y notas.
+[MainThread | CU-02.4] Sistema recorre las semanas en orden y valida en cada una horario de sede, cancha habilitada y ausencia de reservas o bloqueos.
+[MainThread | CU-02.4.semana-1] Verificación semanal | 2026-11-02 10:00-11:00: válida
+[MainThread | CU-02.4.semana-2] Verificación semanal | 2026-11-09 10:00-11:00: válida
+[MainThread | CU-02.5] Sistema registra todas las ocurrencias y su vínculo a la serie en una sola operación.
+[MainThread | CU-02.6] Sistema notifica la serie por el canal de sede y confirma sus ocurrencias.
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R009, cancha S1, 2026-11-02 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R010, cancha S1, 2026-11-09 10:00-11:00; 
+[VALIDADO] Builder usa 2 semanas cuando se omite el opcional.
+
+==============================================================================
+E10 | Mes calendario, recurrencia máxima y suspensión de capitán | RF-08, RF-09
+==============================================================================
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R001, cancha N1, 2026-10-30 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R002, cancha N1, 2026-10-31 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a ana@u.edu | CONFIRMADA: R003, cancha N1, 2026-11-01 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R001: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R001, cancha N1, 2026-10-30 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 2; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R002: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R002, cancha N1, 2026-10-31 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R003: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a ana@u.edu | NO_SHOW: R003, cancha N1, 2026-11-01 16:00-17:00; Cancelación tardía
+[VALIDADO] Dos faltas de octubre y una de noviembre no activan suspensión.
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.3] Sistema prepara las ocurrencias semanales con equipo y notas.
+[MainThread | CU-02.4] Sistema recorre las semanas en orden y valida en cada una horario de sede, cancha habilitada y ausencia de reservas o bloqueos.
+[MainThread | CU-02.4.semana-1] Verificación semanal | 2026-12-01 10:00-11:00: válida
+[MainThread | CU-02.4.semana-2] Verificación semanal | 2026-12-08 10:00-11:00: válida
+[MainThread | CU-02.4.semana-3] Verificación semanal | 2026-12-15 10:00-11:00: válida
+[MainThread | CU-02.4.semana-4] Verificación semanal | 2026-12-22 10:00-11:00: válida
+[MainThread | CU-02.4.semana-5] Verificación semanal | 2026-12-29 10:00-11:00: válida
+[MainThread | CU-02.4.semana-6] Verificación semanal | 2027-01-05 10:00-11:00: válida
+[MainThread | CU-02.4.semana-7] Verificación semanal | 2027-01-12 10:00-11:00: válida
+[MainThread | CU-02.4.semana-8] Verificación semanal | 2027-01-19 10:00-11:00: válida
+[MainThread | CU-02.5] Sistema registra todas las ocurrencias y su vínculo a la serie en una sola operación.
+[MainThread | CU-02.6] Sistema notifica la serie por el canal de sede y confirma sus ocurrencias.
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R004, cancha S1, 2026-12-01 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R005, cancha S1, 2026-12-08 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R006, cancha S1, 2026-12-15 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R007, cancha S1, 2026-12-22 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R008, cancha S1, 2026-12-29 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R009, cancha S1, 2027-01-05 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R010, cancha S1, 2027-01-12 10:00-11:00; 
+[MainThread | CU-02.6 AVISO] Campus Sur | mensaje de texto a 0993333333 | SERIE S001 CONFIRMADA: R011, cancha S1, 2027-01-19 10:00-11:00; 
+[VALIDADO] Ocho semanas: límite superior admitido.
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R012, cancha N2, 2026-10-10 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R013, cancha N2, 2026-10-11 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R014, cancha N2, 2026-10-12 16:00-17:00; 
+[MainThread | CU-01.1] Actor solicita cancha, fecha y franja al sistema.
+[MainThread | CU-01.2] Sistema valida datos y que el solicitante no esté suspendido.
+[MainThread | CU-01.3] Sistema valida el intervalo con los servicios de la sede de la cancha. | Campus Norte
+[MainThread | CU-01.4] Sistema comprueba cancha, bloqueos y todos los solapamientos dentro de la sección crítica.
+[MainThread | CU-01.5] Sistema crea y registra la reserva con su política; aplica los desplazamientos autorizados sin penalidad.
+[MainThread | CU-01.6] Sistema notifica por el canal de sede la confirmación y los desplazamientos, si existen.
+[MainThread | CU-01.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | CONFIRMADA: R015, cancha N2, 2026-10-13 16:00-17:00; 
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 1; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R012: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | NO_SHOW: R012, cancha N2, 2026-10-10 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 2; suspendido=False; vence=None
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R013: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | NO_SHOW: R013, cancha N2, 2026-10-11 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 3; suspendido=True; vence=2026-10-19 08:00:00
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R014: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | NO_SHOW: R014, cancha N2, 2026-10-12 16:00-17:00; Cancelación tardía
+[MainThread | CU-03.1] Actor solicita cancelar su reserva; administrador solicita anular indicando motivo.
+[MainThread | CU-03.2] Sistema valida propiedad o rol administrador y que la reserva esté activa.
+[MainThread | CU-03.3] Reserva evalúa la política autorizada: regular 2 h, oficial 24 h o anulación administrativa sin penalidad.
+[MainThread | CU-03.3a] Flujo alterno | Anticipación estrictamente menor al umbral; sustituye el paso 4.
+[MainThread | CU-03.3a] Flujo alterno | Faltas del mes: 4; suspendido=True; vence=2026-10-19 08:00:00
+[MainThread | CU-03.5] Sistema conserva resultado y motivo en el historial. | R015: NO_SHOW
+[MainThread | CU-03.6] Sistema notifica por canal de sede e informa el resultado al actor.
+[MainThread | CU-03.6 AVISO] Campus Norte | correo institucional a carlos@u.edu | NO_SHOW: R015, cancha N2, 2026-10-13 16:00-17:00; Cancelación tardía
+[VALIDADO] La cuarta falta del mes no prolonga la suspensión (SP-04).
+[MainThread | CU-02.1] Capitán solicita cancha, fecha inicial, franja, semanas y opcionales al sistema.
+[MainThread | CU-02.2] Sistema valida rol, datos, 2..8 semanas y ausencia de suspensión; omitir semanas implica 2.
+[MainThread | CU-02.2b] Flujo alterno | RECHAZO: Suspensión hasta 2026-10-19 08:00:00
+[VALIDADO] Un capitán suspendido tampoco crea recurrencias (CU-02.2b).
+
+SIMULACIÓN COMPLETA: todos los escenarios y comprobaciones finalizaron correctamente.
